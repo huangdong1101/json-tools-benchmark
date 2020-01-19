@@ -26,7 +26,7 @@ public class Main {
     private File jsonFile;
 
     @Parameter(required = true, converter = ToolsConverter.class)
-    private Tools jsonUtils;
+    private Tools jsonTools;
 
     public void execute() throws Exception {
         assert this.c > 0;
@@ -35,13 +35,13 @@ public class Main {
         String text = Files.asCharSource(this.jsonFile, Charsets.UTF_8).read();
         ExecutorService executorService = Executors.newFixedThreadPool(this.n);
         List<Future<Long>> futures = new ArrayList<>(this.n);
-        futures.add(executorService.submit(new Task(() -> this.jsonUtils.readField(text, "errno"), this.n / this.c)));
+        futures.add(executorService.submit(new Task(() -> this.jsonTools.readField(text, "errno"), this.n / this.c)));
         long costs = 0;
         for (Future<Long> future : futures) {
             costs += future.get();
         }
         executorService.shutdownNow();
-        System.out.println(this.jsonUtils.desc() + " 并发：" + this.c + "，累计：" + this.n / this.c * this.c + "次，耗时：" + costs + "毫秒");
+        System.out.println(this.jsonTools.desc() + " 并发：" + this.c + "，累计：" + this.n / this.c * this.c + "次，耗时：" + costs + "毫秒");
     }
 
     public static void main(String... args) throws Exception {
