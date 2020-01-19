@@ -1,3 +1,4 @@
+```
 com.google.gson 并发：5，累计：100000次，耗时：13282毫秒
 com.google.gson 并发：5，累计：100000次，耗时：12126毫秒
 com.google.gson 并发：5，累计：100000次，耗时：12248毫秒
@@ -35,3 +36,4 @@ avg: 22067.8毫秒
 
 耗时：com.json > com.google.gson > com.alibaba.fastjson > com.jsoniter > com.fasterxml.jackson
 最优：com.fasterxml.jackson
+```
