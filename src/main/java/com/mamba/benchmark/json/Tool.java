@@ -28,7 +28,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.function.Function;
 
-public enum Tools {
+public enum Tool {
 
     json("org.json") {
         @Override
@@ -175,7 +175,7 @@ public enum Tools {
 
     private final String desc;
 
-    Tools(String desc) {
+    Tool(String desc) {
         this.desc = desc;
     }
 
@@ -196,11 +196,4 @@ public enum Tools {
     public abstract int readField(byte[] bytes, String field) throws IOException;
 
     public abstract int readField(File file, String field) throws IOException;
-
-    class Converter implements IStringConverter<Tools> {
-        @Override
-        public Tools convert(String s) {
-            return Tools.valueOf(s);
-        }
-    }
 }

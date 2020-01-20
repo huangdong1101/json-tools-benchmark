@@ -25,15 +25,15 @@ public class Main {
     @Parameter(names = {"-f"}, required = true)
     private File jsonFile;
 
-    @Parameter(required = true, converter = Tools.Converter.class)
-    private Tools jsonTools;
+    @Parameter(required = true)
+    private Tool jsonTool;
 
     public void execute() throws Exception {
         assert this.c > 0;
         assert this.n > 0;
         assert this.n % this.c == 0;
 
-        Scene.Task task = scene.newTask(this.jsonTools, this.jsonFile, "errno");
+        Scene.Task task = scene.newTask(this.jsonTool, this.jsonFile, "errno");
         ExecutorService executorService = Executors.newFixedThreadPool(this.n);
         List<Future<Long>> futures = new ArrayList<>(this.n);
         futures.add(executorService.submit(new Task(task, this.n / this.c)));
@@ -42,7 +42,7 @@ public class Main {
             costs += future.get();
         }
         executorService.shutdownNow();
-        System.out.println(this.jsonTools.desc() + " (" + this.scene.name() + ") 并发：" + this.c + "，累计：" + this.n / this.c * this.c + "次，耗时：" + costs + "毫秒");
+        System.out.println(this.jsonTool.desc() + " (" + this.scene.name() + ") 并发：" + this.c + "，累计：" + this.n / this.c * this.c + "次，耗时：" + costs + "毫秒");
     }
 
     public static void main(String... args) throws Exception {
