@@ -196,4 +196,11 @@ public enum Tool {
     public abstract int readField(byte[] bytes, String field) throws IOException;
 
     public abstract int readField(File file, String field) throws IOException;
+
+    class Converter implements IStringConverter<Tool> {
+        @Override
+        public Tool convert(String s) {
+            return Tool.valueOf(s);
+        }
+    }
 }

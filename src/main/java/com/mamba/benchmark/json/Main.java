@@ -25,7 +25,7 @@ public class Main {
     @Parameter(names = {"-f"}, required = true)
     private File jsonFile;
 
-    @Parameter(required = true)
+    @Parameter(required = true, converter = Tool.Converter.class)
     private Tool jsonTool;
 
     public void execute() throws Exception {
