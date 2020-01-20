@@ -1,10 +1,7 @@
 package com.mamba.benchmark.json;
 
-import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,26 +19,30 @@ public class Main {
     @Parameter(names = {"-n"}, required = true)
     private int n = 1000;
 
+    @Parameter(names = {"-t"}, required = true)
+    private Scene scene;
+
     @Parameter(names = {"-f"}, required = true)
     private File jsonFile;
 
-    @Parameter(required = true, converter = ToolsConverter.class)
+    @Parameter(required = true, converter = Tools.Converter.class)
     private Tools jsonTools;
 
     public void execute() throws Exception {
         assert this.c > 0;
         assert this.n > 0;
         assert this.n % this.c == 0;
-        String text = Files.asCharSource(this.jsonFile, Charsets.UTF_8).read();
+
+        Scene.Task task = scene.newTask(this.jsonTools, this.jsonFile, "errno");
         ExecutorService executorService = Executors.newFixedThreadPool(this.n);
         List<Future<Long>> futures = new ArrayList<>(this.n);
-        futures.add(executorService.submit(new Task(() -> this.jsonTools.readField(text, "errno"), this.n / this.c)));
+        futures.add(executorService.submit(new Task(task, this.n / this.c)));
         long costs = 0;
         for (Future<Long> future : futures) {
             costs += future.get();
         }
         executorService.shutdownNow();
-        System.out.println(this.jsonTools.desc() + " 并发：" + this.c + "，累计：" + this.n / this.c * this.c + "次，耗时：" + costs + "毫秒");
+        System.out.println(this.jsonTools.desc() + " (" + this.scene.name() + ") 并发：" + this.c + "，累计：" + this.n / this.c * this.c + "次，耗时：" + costs + "毫秒");
     }
 
     public static void main(String... args) throws Exception {
@@ -52,11 +53,11 @@ public class Main {
 
     private static class Task implements Callable<Long> {
 
-        private final Executable task;
+        private final Scene.Task task;
 
         private final int n;
 
-        public Task(Executable task, int n) {
+        public Task(Scene.Task task, int n) {
             this.task = task;
             this.n = n;
         }
@@ -69,17 +70,6 @@ public class Main {
             }
             long endTime = System.currentTimeMillis();
             return endTime - beginTime;
-        }
-
-        private interface Executable {
-            void execute() throws Exception;
-        }
-    }
-
-    private static class ToolsConverter implements IStringConverter<Tools> {
-        @Override
-        public Tools convert(String s) {
-            return Tools.valueOf(s);
         }
     }
 }
