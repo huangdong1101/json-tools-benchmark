@@ -23,6 +23,12 @@ com.google.gson       (text) 并发：5，累计：1000000次，实验5次，平
 com.alibaba.fastjson  (text) 并发：5，累计：1000000次，实验5次，平均耗时： 75838.4毫秒
 com.jsoniter          (text) 并发：5，累计：1000000次，实验5次，平均耗时： 74132.6毫秒
 
+org.json              : text  (196769.4) > file  (226818.0) > bytes (238797.4)
+com.fasterxml.jackson : bytes ( 64357.4) > file  ( 67601.0) > text  ( 71433.8)
+com.google.gson       : text  (120887.4) > bytes (142374.4) > file  (148585.6)
+com.alibaba.fastjson  : text  ( 75838.4) > bytes ( 98374.4) > file  (104180.2)
+com.jsoniter          : bytes ( 50930.6) > file  ( 57571.8) > text  ( 74132.6)
+
 实验详情：
 org.json (bytes) 并发：5，累计：1000000次，耗时：272416毫秒
 org.json (bytes) 并发：5，累计：1000000次，耗时：245396毫秒
